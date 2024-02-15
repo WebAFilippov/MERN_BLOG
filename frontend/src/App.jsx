@@ -1,7 +1,5 @@
-const App = () => {
-    return (
-        <h1>MERN Blogging website by modern web</h1>
-    )
-}
+import { Navbar } from "./components/navbar.component"
 
-export default App;
+export const App = () => {
+  return <Navbar />
+}
