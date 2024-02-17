@@ -1,9 +1,0 @@
-POST http://localhost:5000/api/auth/signup 
-Content-Type: application/json
-
-
-{
-    "fullname": "111",
-    "email": "kunaa@g22122mail.com",
-    "password": "Kunaal1"
-}
