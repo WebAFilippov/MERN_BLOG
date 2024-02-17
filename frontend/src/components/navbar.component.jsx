@@ -1,7 +1,8 @@
+import { useState } from "react"
 import { Link, Outlet } from "react-router-dom"
+import { cn } from "../utils/cn"
 
 import logo from "../imgs/logo.png"
-import { useState } from "react"
 
 export const Navbar = () => {
   const [searchBoxVisiblility, setSearchBoxVisibility] = useState(false)
@@ -13,10 +14,10 @@ export const Navbar = () => {
           <img src={logo} alt="logo" className="w-full" />
         </Link>
         <div
-          className={
-            "absolute top-full left-0 py-4 px-[5vw] bg-white w-full border-b border-grey mt-0.5 md:relative md:block md:inset-0 md:p-0 md:border-none md:w-auto md:show " +
-            (searchBoxVisiblility ? "show" : "hide")
-          }
+          className={cn(
+            "absolute top-full left-0 py-4 px-[5vw] bg-white w-full border-b border-grey mt-0.5 md:relative md:block md:inset-0 md:p-0 md:border-none md:w-auto md:show ",
+            searchBoxVisiblility ? "show" : "hide",
+          )}
         >
           <input
             type="text"
@@ -37,7 +38,7 @@ export const Navbar = () => {
             )}
           </button>
           <Link to="/editor" className="hidden md:flex gap-2 link">
-            <i class="fi fi-rr-file-edit"></i>
+            <i className="fi fi-rr-file-edit"></i>
             <p>Написать</p>
           </Link>
           <Link to="/signin" className="btn-dark py-2">
