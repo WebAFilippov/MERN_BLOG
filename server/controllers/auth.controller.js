@@ -16,6 +16,10 @@ export const signup = async (req, res, next) => {
     return res.status(403).json({ error: 'Имя должно содержать минимум 3 символа' });
   }
 
+  if (email.length < 3) {
+    return res.status(403).json({ error: 'Электронная почта должна содержать минимум 3 символа' });
+  }
+
   const emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
   if (!emailRegex.test(req.body.email)) {
     return res.status(403).json({ error: 'Некорректный формат email' });
