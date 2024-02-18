@@ -53,7 +53,7 @@ export const signup = async (req, res, next) => {
   const token = jwt.sign({ id: newUser._id }, process.env.JWT_TOKEN)
   returnedData.accessToken = token
 
-  return res.status(200).json({ success: true, returnedData })
+  return res.status(200).json(returnedData)
 }
 
 export const signin = async (req, res, next) => {
@@ -87,5 +87,5 @@ export const signin = async (req, res, next) => {
   const token = jwt.sign({ id: existingUser._id }, process.env.JWT_TOKEN)
   returnedData.accessToken = token
 
-  res.status(200).json({ success: true, user: returnedData })
+  res.status(200).json(returnedData)
 }

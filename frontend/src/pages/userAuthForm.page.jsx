@@ -4,10 +4,10 @@ import { Toaster, toast } from "react-hot-toast"
 import { InputBox } from "../components/input.component"
 import googleIcon from "../imgs/google.png"
 import { AnimationWrapper } from "../common/page-animation"
+import axios from "../utils/axios"
 
 export const UserAuthForm = ({ type }) => {
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     let form = new FormData(formElement)
@@ -40,6 +40,16 @@ export const UserAuthForm = ({ type }) => {
     if (!passwordRegex.test(password)) {
       return toast.error("Пожалуйста, введите корректный пароль")
     }
+
+    let reqURL = type === "signin" ? "/auth/signin" : "/auth/signup"
+    axios
+      .post(reqURL, formData)
+      .then(({ data }) => {
+        console.log(data)
+      })
+      .catch(({ response }) => {
+        return toast.error(response.data.error)
+      })
   }
 
   return (
