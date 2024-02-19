@@ -1,11 +1,16 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Link, Outlet } from "react-router-dom"
 import { cn } from "../utils/cn"
 
 import logo from "../imgs/logo.png"
+import { UserContext } from "../App"
 
 export const Navbar = () => {
   const [searchBoxVisiblility, setSearchBoxVisibility] = useState(false)
+  const {
+    userAuth,
+    userAuth: { accessToken, profile_img },
+  } = useContext(UserContext)
 
   return (
     <>
@@ -41,12 +46,29 @@ export const Navbar = () => {
             <i className="fi fi-rr-file-edit"></i>
             <p>Написать</p>
           </Link>
-          <Link to="/signin" className="btn-dark py-2">
-            Войти
-          </Link>
-          <Link to="/signup" className="btn-light hidden md:block py-2">
-            Регистрация
-          </Link>
+          {accessToken ? (
+            <>
+              <Link to="/dashboard/notification">
+                <button className="w-12 h-12 bg-grey flex items-center justify-center rounded-full hover:bg-black/10">
+                  <i className="fi fi-rr-bell text-2xl mt-2" />
+                </button>
+              </Link>
+              <div className="flex justify-center items-center">
+                <button className="w-12 h-12">
+                  <img src={profile_img} alt="profile_img" className="rounded-full object-cover"/>
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <Link to="/signin" className="btn-dark py-2">
+                Войти
+              </Link>
+              <Link to="/signup" className="btn-light hidden md:block py-2">
+                Регистрация
+              </Link>
+            </>
+          )}
         </div>
       </nav>
 
