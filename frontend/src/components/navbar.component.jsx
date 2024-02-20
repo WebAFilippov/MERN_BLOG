@@ -4,13 +4,23 @@ import { cn } from "../utils/cn"
 
 import logo from "../imgs/logo.png"
 import { UserContext } from "../App"
+import { UserNavigationPanel } from "./user-navigation.component"
 
 export const Navbar = () => {
   const [searchBoxVisiblility, setSearchBoxVisibility] = useState(false)
+  const [userNavPanel, setUserNavPanel] = useState(false)
   const {
     userAuth,
     userAuth: { accessToken, profile_img },
   } = useContext(UserContext)
+
+  const handleNavPanel = () => {
+    setUserNavPanel(!userNavPanel)
+  }
+
+  const handleBlurUserNav = () => {
+    setUserNavPanel(false)
+  }
 
   return (
     <>
@@ -53,10 +63,19 @@ export const Navbar = () => {
                   <i className="fi fi-rr-bell text-2xl mt-2" />
                 </button>
               </Link>
-              <div className="flex justify-center items-center">
-                <button className="w-12 h-12">
-                  <img src={profile_img} alt="profile_img" className="rounded-full object-cover"/>
+              <div
+                className="relative w-12 h-12"
+                onClick={handleNavPanel}
+                onBlur={handleBlurUserNav}
+              >
+                <button>
+                  <img
+                    src={profile_img}
+                    alt="profile_img"
+                    className="w-full h-full rounded-full object-cover"
+                  />
                 </button>
+                {userNavPanel && <UserNavigationPanel />}
               </div>
             </>
           ) : (
