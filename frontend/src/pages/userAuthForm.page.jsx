@@ -1,6 +1,7 @@
 import { useContext } from "react"
 import { Link, Navigate, useNavigate } from "react-router-dom"
 import { Toaster, toast } from "react-hot-toast"
+import { signInWithPopup } from "firebase/auth"
 
 import axios from "../utils/axios"
 import googleIcon from "../imgs/google.png"
@@ -8,6 +9,7 @@ import { InputBox } from "../components/input.component"
 import { storeInSession } from "../common/session"
 import { AnimationWrapper } from "../common/page-animation"
 import { UserContext } from "../App"
+import { auth, provider } from "../common/firebase"
 
 export const UserAuthForm = ({ type }) => {
   const navigate = useNavigate()
@@ -63,6 +65,22 @@ export const UserAuthForm = ({ type }) => {
       })
   }
 
+  const handleGoogleAuth = async () => {
+    try {
+      const {
+        user: { accessToken },
+      } = await signInWithPopup(auth, provider)
+
+      const { data } = await axios.post("/auth/google-auth", { accessToken })
+
+      storeInSession("user", JSON.stringify(data))
+      setUserAuth(data)
+      navigate("/")
+    } catch (err) {
+      toast.error(err.message)
+    }
+  }
+
   return accessToken ? (
     <Navigate to="/" />
   ) : (
@@ -115,7 +133,8 @@ export const UserAuthForm = ({ type }) => {
 
           <button
             type="button"
-            className="flex gap-4 items-center justify-center btn-dark w-[90%] mx-auto mb-10"
+            className="flex gap-4 items-center justify-center btn-dark w-[90%] mx-auto mb-10 normal-case"
+            onClick={handleGoogleAuth}
           >
             <img src={googleIcon} alt="googleIcon" className="w-5" />
             <p>Войти с помощью Google</p>

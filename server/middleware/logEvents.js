@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const logEvents = async (message, logName) => {
-  const dateTime = `${format(new Date(), 'yyyyMMdd\tHH:mm:ss')}`;
+  const dateTime = `${format(new Date(), 'dd.MM.yyyy\tHH:mm:ss')}`;
   const logItem = `${dateTime}\t${uuid().substring(0, 6)}\t${message}\n`;
 
   try {

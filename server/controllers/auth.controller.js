@@ -4,6 +4,9 @@ import jwt from "jsonwebtoken"
 
 import User from "../model/User.js"
 import { formatDataToSend } from "../utils/formatDataToSend.js"
+import { getAuth } from "firebase-admin/auth"
+import { transformEmailToUser } from "../utils/transformEmailtoUsername.js"
+
 
 export const signup = async (req, res, next) => {
   const { fullname, email, password } = req.body
@@ -35,12 +38,7 @@ export const signup = async (req, res, next) => {
     return res.status(400).json({ error: "Такой Email существует" })
   }
 
-  let username = email.split("@")[0]
-  const existsUsername = await User.exists({ "personal_info.username": username })
-  if (existsUsername) {
-    username += nanoid().substring(0, 5)
-  }
-
+  const username = transformEmailToUser(email)
   const hashedPassword = await bcryptjs.hash(password, 10)
 
   const newUser = await User.create({
@@ -74,6 +72,9 @@ export const signin = async (req, res, next) => {
   }
 
   const existingUser = await User.findOne({ "personal_info.email": email })
+  if (existingUser.google_auth) {
+    return res.status(400).json({ error: "Войдите с помощью Google Auth" })
+  }
   if (!existingUser) {
     return res.status(404).json({ error: "Пользователь с указанным адресом электронной почты не найден" })
   }
@@ -88,4 +89,47 @@ export const signin = async (req, res, next) => {
   returnedData.accessToken = token
 
   res.status(200).json(returnedData)
+}
+
+export const google = async (req, res, next) => {
+  const { accessToken } = req.body
+
+  try {
+
+    let { name, email, picture } = await getAuth().verifyIdToken(accessToken)
+    picture = picture.replace("s96-c", "s384-c")
+
+    const user = await User.findOne({ "personal_info.email": email })
+
+    if (!user) {
+      const username = await transformEmailToUser(email)
+      const password = nanoid()
+      const hashedPassword = await bcryptjs.hash(password, 10)
+
+      const newUser = await User.create({
+        personal_info: {
+          fullname: name,
+          username,
+          email,
+          password: hashedPassword,
+          profile_img: picture
+        },
+        google_auth: true
+      })
+
+      let returnedData = formatDataToSend(newUser._doc)
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_TOKEN)
+      returnedData.accessToken = token
+      return res.status(200).json(returnedData)
+
+    } else {
+      let returnedData = formatDataToSend(user._doc)
+      const token = jwt.sign({ id: user._id }, process.env.JWT_TOKEN)
+      returnedData.accessToken = token
+      return res.status(200).json(returnedData)
+
+    }
+  } catch (err) {
+    next(err)
+  }
 }

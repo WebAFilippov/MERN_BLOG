@@ -19,7 +19,7 @@ export const Navbar = () => {
   }
 
   const handleBlurUserNav = () => {
-    setUserNavPanel(false)
+    setTimeout(() => setUserNavPanel(false), 200)
   }
 
   return (
