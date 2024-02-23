@@ -11,6 +11,7 @@ import logo from "../imgs/logo.png"
 
 export const BlogEditor = () => {
   const [progressValue, setProgressValue] = useState(0)
+  const [titleBlog, setTitleBlog] = useState("")
   const blogBannerRef = useRef(null)
 
   const handleUploadBlogBanner = (e) => {
@@ -48,6 +49,17 @@ export const BlogEditor = () => {
     )
   }
 
+  const handleTitleKeyDown = (e) => {
+    if (e.keyCode === 13) e.preventDefault()
+  }
+
+  const handleTitleChange = (e) => {
+    const element = e.target
+    element.style.height = "auto"
+    element.style.height = element.scrollHeight + "px"
+    setTitleBlog(e.target.value)
+  }
+
   return (
     <>
       <Toaster />
@@ -55,7 +67,9 @@ export const BlogEditor = () => {
         <Link to="/" className="flex-none size-10">
           <img src={logo} alt="logo" />
         </Link>
-        <p className="max-md:hidden line-clamp-1 text-black w-full text-2xl">Новый блог</p>
+        <p className="max-md:hidden line-clamp-1 text-black w-full text-2xl">
+          {titleBlog ? titleBlog : "Новый блог"}
+        </p>
         <div className=" ml-auto flex gap-4">
           <button className="btn-dark py-2">Опубликовать</button>
           <button className="btn-light py-2">Черновик</button>
@@ -78,6 +92,14 @@ export const BlogEditor = () => {
               </label>
             </div>
             {progressValue > 0 && <ProgressBar value={progressValue} />}
+            <textarea
+              name="blogTitle"
+              id="blogTitle"
+              placeholder="Название"
+              className="text-4xl font-medium mt-10 w-full h-40 outline-none placeholder:text-opacity-40 resize-none leading-tight"
+              onKeyDown={handleTitleKeyDown}
+              onChange={handleTitleChange}
+            ></textarea>
           </div>
         </section>
       </AnimationWrapper>
