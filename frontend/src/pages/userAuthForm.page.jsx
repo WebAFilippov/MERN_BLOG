@@ -1,7 +1,6 @@
 import { useContext } from "react"
 import { Link, Navigate, useNavigate } from "react-router-dom"
 import { Toaster, toast } from "react-hot-toast"
-import { signInWithPopup } from "firebase/auth"
 
 import axios from "../utils/axios"
 import googleIcon from "../imgs/google.png"
@@ -9,7 +8,7 @@ import { InputBox } from "../components/input.component"
 import { storeInSession } from "../common/session"
 import { AnimationWrapper } from "../common/page-animation"
 import { UserContext } from "../App"
-import { auth, provider } from "../common/firebase"
+import { auth, authGoogleWithPopup, provider } from "../common/firebase"
 
 export const UserAuthForm = ({ type }) => {
   const navigate = useNavigate()
@@ -67,10 +66,8 @@ export const UserAuthForm = ({ type }) => {
 
   const handleGoogleAuth = async () => {
     try {
-      const {
-        user: { accessToken },
-      } = await signInWithPopup(auth, provider)
-
+      const accessToken = await authGoogleWithPopup()
+      
       const { data } = await axios.post("/auth/google-auth", { accessToken })
 
       storeInSession("user", JSON.stringify(data))

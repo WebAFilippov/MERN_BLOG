@@ -6,6 +6,7 @@ import dotenv from "dotenv"
 dotenv.config()
 
 import authRoute from "./route/auth.route.js"
+import blogRoute from "./route/blog.route.js"
 import { logger } from "./middleware/logEvents.js"
 import { errorHandler } from './middleware/errorHandler.js';
 import serviceAccountKey from "./mern-blog-jsx-firebase-adminsdk-10x5b-a05bedfd1c.json"assert {
@@ -27,6 +28,8 @@ server.use(cors())
 server.use(logger)
 
 server.use("/api/auth", authRoute)
+server.use("/api/blog", blogRoute)
+
 
 server.use(errorHandler)
 
