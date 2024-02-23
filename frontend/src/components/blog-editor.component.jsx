@@ -101,15 +101,19 @@ export const BlogEditor = () => {
               </label>
             </div>
             {progressValue > 0 && <ProgressBar value={progressValue} />}
+
             {/* title */}
             <textarea
               name="blogTitle"
               id="blogTitle"
               placeholder="Название"
               className="text-4xl font-medium mt-10 w-full h-40 outline-none placeholder:text-opacity-40 resize-none leading-tight"
+              style={{ height: "auto" }}
               onKeyDown={handleTitleKeyDown}
               onChange={handleTitleChange}
             ></textarea>
+
+            <hr className="w-full opacity-10 my-5" />
           </div>
         </section>
       </AnimationWrapper>
