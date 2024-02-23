@@ -17,6 +17,7 @@ export const AnimationWrapper = ({
         animate={animate}
         transition={transition}
         exit={exit}
+        className={className}
       >
         {children}
       </motion.div>

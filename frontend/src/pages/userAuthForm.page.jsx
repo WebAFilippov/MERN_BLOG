@@ -8,7 +8,7 @@ import { InputBox } from "../components/input.component"
 import { storeInSession } from "../common/session"
 import { AnimationWrapper } from "../common/page-animation"
 import { UserContext } from "../App"
-import { auth, authGoogleWithPopup, provider } from "../common/firebase"
+import { authGoogleWithPopup } from "../common/firebase"
 
 export const UserAuthForm = ({ type }) => {
   const navigate = useNavigate()
@@ -20,6 +20,7 @@ export const UserAuthForm = ({ type }) => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    // eslint-disable-next-line no-undef
     let form = new FormData(formElement)
     let formData = {}
     for (let [key, value] of form.entries()) {
@@ -42,7 +43,8 @@ export const UserAuthForm = ({ type }) => {
     }
 
     const emailRegex =
-      /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+
     if (!emailRegex.test(email)) {
       return toast.error("Пожалуйста, введите корректный адрес электронной почты")
     }
@@ -67,7 +69,7 @@ export const UserAuthForm = ({ type }) => {
   const handleGoogleAuth = async () => {
     try {
       const accessToken = await authGoogleWithPopup()
-      
+
       const { data } = await axios.post("/auth/google-auth", { accessToken })
 
       storeInSession("user", JSON.stringify(data))

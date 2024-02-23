@@ -24,7 +24,7 @@ export const Editor = () => {
   } = useContext(UserContext)
 
   return (
-    <EditorContext.Provider value={{ blog, setBlog }}>
+    <EditorContext.Provider value={{ blog, setBlog, editorState, setEditorState }}>
       {accessToken === null ? (
         <Navigate to="/signin" />
       ) : editorState === "editor" ? (

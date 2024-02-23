@@ -15,6 +15,8 @@ export const BlogEditor = () => {
   const [progressValue, setProgressValue] = useState(0)
   const blogBannerRef = useRef(null)
 
+  console.log(blog)
+
   const handleUploadBlogBanner = (e) => {
     const image = e.target.files[0]
     if (!image) return
@@ -32,6 +34,7 @@ export const BlogEditor = () => {
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         setProgressValue(Math.round(progress))
       },
+      // eslint-disable-next-line no-unused-vars
       (err) => {
         setProgressValue(0)
         toast.dismiss(toastLoading)

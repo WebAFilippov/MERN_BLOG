@@ -10,7 +10,6 @@ export const Navbar = () => {
   const [searchBoxVisiblility, setSearchBoxVisibility] = useState(false)
   const [userNavPanel, setUserNavPanel] = useState(false)
   const {
-    userAuth,
     userAuth: { accessToken, profile_img },
   } = useContext(UserContext)
 
