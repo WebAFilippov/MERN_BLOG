@@ -1,17 +1,18 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useContext } from "react"
 import { Link } from "react-router-dom"
 import { Toaster, toast } from "react-hot-toast"
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
 
 import { storage } from "../common/firebase"
-import { AnimationWrapper } from "../common/page-animation"
 import { ProgressBar } from "./progress-bar.component"
+import { EditorContext } from "../pages/editor.pages"
+import { AnimationWrapper } from "../common/page-animation"
 import blogBanner from "../imgs/blog banner.png"
 import logo from "../imgs/logo.png"
 
 export const BlogEditor = () => {
+  const { blog, setBlog } = useContext(EditorContext)
   const [progressValue, setProgressValue] = useState(0)
-  const [titleBlog, setTitleBlog] = useState("")
   const blogBannerRef = useRef(null)
 
   const handleUploadBlogBanner = (e) => {
@@ -43,7 +44,7 @@ export const BlogEditor = () => {
           toast.remove()
           setProgressValue(0)
           toast.success("Фотография успено загружена")
-          blogBannerRef.current.src = downloadURL
+          setBlog({ ...blog, banner: downloadURL })
         })
       },
     )
@@ -57,7 +58,7 @@ export const BlogEditor = () => {
     const element = e.target
     element.style.height = "auto"
     element.style.height = element.scrollHeight + "px"
-    setTitleBlog(e.target.value)
+    setBlog({ ...blog, title: e.target.value })
   }
 
   return (
@@ -68,7 +69,7 @@ export const BlogEditor = () => {
           <img src={logo} alt="logo" />
         </Link>
         <p className="max-md:hidden line-clamp-1 text-black w-full text-2xl">
-          {titleBlog ? titleBlog : "Новый блог"}
+          {blog.title ? blog.title : "Новый блог"}
         </p>
         <div className=" ml-auto flex gap-4">
           <button className="btn-dark py-2">Опубликовать</button>
@@ -79,9 +80,14 @@ export const BlogEditor = () => {
       <AnimationWrapper>
         <section>
           <div className="max-w-[900px] w-full mx-auto relative">
+            {/* banner */}
             <div className="relative aspect-video bg-white border-4 border-grey hover:opacity-80">
               <label htmlFor="blogBanner" className="cursor-pointer">
-                <img ref={blogBannerRef} src={blogBanner} alt="blogBanner" />
+                <img
+                  ref={blogBannerRef}
+                  src={blog.banner ? blog.banner : blogBanner}
+                  alt="blogBanner"
+                />
                 <input
                   id="blogBanner"
                   type="file"
@@ -92,6 +98,7 @@ export const BlogEditor = () => {
               </label>
             </div>
             {progressValue > 0 && <ProgressBar value={progressValue} />}
+            {/* title */}
             <textarea
               name="blogTitle"
               id="blogTitle"
