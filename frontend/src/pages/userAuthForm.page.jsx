@@ -132,7 +132,7 @@ export const UserAuthForm = ({ type }) => {
 
           <button
             type="button"
-            className="flex gap-4 items-center justify-center btn-dark w-[90%] mx-auto mb-10 normal-case"
+            className="btn-dark mx-auto mb-10 flex w-[90%] items-center justify-center gap-4 normal-case"
             onClick={handleGoogleAuth}
           >
             <img src={googleIcon} alt="googleIcon" className="w-5" />

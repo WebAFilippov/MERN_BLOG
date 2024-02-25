@@ -1,4 +1,4 @@
-import { useState, useRef, useContext } from "react"
+import { useState, useContext } from "react"
 import { Link } from "react-router-dom"
 import { Toaster, toast } from "react-hot-toast"
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
@@ -13,9 +13,6 @@ import logo from "../imgs/logo.png"
 export const BlogEditor = () => {
   const { blog, setBlog } = useContext(EditorContext)
   const [progressValue, setProgressValue] = useState(0)
-  const blogBannerRef = useRef(null)
-
-  console.log(blog)
 
   const handleUploadBlogBanner = (e) => {
     const image = e.target.files[0]
@@ -44,7 +41,7 @@ export const BlogEditor = () => {
       },
       () => {
         getDownloadURL(uploadFile.snapshot.ref).then((downloadURL) => {
-          toast.remove()
+          toast.dismiss(toastLoading)
           setProgressValue(0)
           toast.success("Фотография успено загружена")
           setBlog({ ...blog, banner: downloadURL })
@@ -62,6 +59,11 @@ export const BlogEditor = () => {
     element.style.height = "auto"
     element.style.height = element.scrollHeight + "px"
     setBlog({ ...blog, title: e.target.value })
+  }
+
+  const handleErrorBanner = (e) => {
+    const imgTarget = e.target
+    imgTarget.src = blogBanner
   }
 
   return (
@@ -84,13 +86,9 @@ export const BlogEditor = () => {
         <section>
           <div className="max-w-[900px] w-full mx-auto relative">
             {/* banner */}
-            <div className="relative aspect-video bg-white border-4 border-grey hover:opacity-80">
+            <div className="relative aspect-video bg-white border-4 border-grey hover:opacity-80 duration-500">
               <label htmlFor="blogBanner" className="cursor-pointer">
-                <img
-                  ref={blogBannerRef}
-                  src={blog.banner ? blog.banner : blogBanner}
-                  alt="blogBanner"
-                />
+                <img src={blog.banner} alt="blogBanner" onError={handleErrorBanner} />
                 <input
                   id="blogBanner"
                   type="file"
